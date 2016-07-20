@@ -1,0 +1,19 @@
+language: generic
+sudo: required
+
+matrix:
+  include:
+   - env: VERSION=7.10.3
+     os: linux
+
+before_install: true
+install:
+  - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
+  - travis_retry sudo apt-get update
+  - travis_retry sudo apt-get install --force-yes ghc-$VERSION-prof ghc-$VERSION-dyn
+before_script: true
+script:
+ - ghc --version
+ - echo "main = return ()" > Main.hs
+ - ghc --make Main.hs
+ - ghc --make Main.hs -prof
